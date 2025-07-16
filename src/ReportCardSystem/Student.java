@@ -7,10 +7,10 @@ class Student {
 	public String Name;
 	
 	// Storage for all records studentId and StudentSubjects
-	static HashMap<String, ArrayList<Subject>> AllSubjects = new HashMap<String, ArrayList<Subject>>();
+	public static HashMap<String, ArrayList<Subject>> AllSubjects = new HashMap<String, ArrayList<Subject>>();
 	
 	// Storage for all Students and their ID AllStudents<Name, Id>
-	static HashMap<String, String> AllStudents = new HashMap<String, String>();
+	public static HashMap<String, String> AllStudents = new HashMap<String, String>();
 	
 	// The beginning of generating Id number
 	private static int idNumber = 0;

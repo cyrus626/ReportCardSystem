@@ -22,34 +22,52 @@ public class Main {
 				//Student.DisplayStudent();
 				break;
 			case "3":
-				
-				String studentId = messagePrompt("Enter student Id");
+				// Display student details when ID is entered.
+				String studentId = messagePrompt("Enter student Id: ");
 				
 				SearchStudentById(studentId.toUpperCase());
 				break;
 			case "4":
-				messagePrompt("Enter StudentId or Name");
-				String filePath = "C:\\Users\\Staff\\Desktop\\Java programs\\FilePractice\\ReportCard.txt";
-				try {
-					FileWriter writer = new FileWriter(filePath);
-					writer.write(Student.AllStudents + "\n" + Student.AllSubjects);
-					
-					writer.close();
-				}catch(IOException e) {
-					println("Error storing in file");
-					e.printStackTrace();
-				}
+				
+				PrintToFile(messagePrompt("Enter StudentId: "));
+								
+				
 				
 				break;
 			case "5":
 				print("Exiting application");
 				break;
 			default:
-				println("You've entered incorrect option\nPress enter to continue");
+				messagePrompt("You've entered incorrect option\nPress enter to continue");
 			}
 		}while(!choice.equals("5"));
 	}
-	
+	static void PrintToFile(String searchId) {
+		String filePath = "C:\\Users\\Staff\\Desktop\\Java programs\\FilePractice\\ReportCard.txt";
+		String fileContent = "Id, Name, Subject, Score\n";
+		
+		for(String studentName: Student.AllStudents.keySet()) {
+			// Get Id, Name
+			String studentId = Student.AllStudents.get(studentName);
+			if(studentId.equals(searchId)) {
+				fileContent +=  studentId + ", " +studentName;
+				for (Subject subject: Student.AllSubjects.get(studentId)) {
+					fileContent += subject.Name + ", " + subject.Score + "\n";
+				}
+			}
+		}
+		
+		try {
+			FileWriter writer = new FileWriter(filePath);
+			writer.write(fileContent);
+			
+			writer.close();
+		}catch(IOException e) {
+			println("Error storing in file");
+			e.printStackTrace();
+		}
+		
+	}
 	static void SearchStudentById(String searchId) {
 		
 		for(String name: Student.AllStudents.keySet()) {
@@ -67,7 +85,7 @@ public class Main {
 		String name = messagePrompt("Enter your name: ");
 		String subjectTitle = messagePrompt("Enter Subject: ");
 		double score = Double.parseDouble(messagePrompt("Enter Score: "));
-		Student student = new Student(name, subjectTitle, score);
+		new Student(name, subjectTitle, score);
 	}	
 	
 	static String messagePrompt(String message) {
