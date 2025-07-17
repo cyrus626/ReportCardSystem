@@ -1,5 +1,7 @@
 package ReportCardSystem;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 public class Main {
@@ -28,11 +30,12 @@ public class Main {
 				SearchStudentById(studentId.toUpperCase());
 				break;
 			case "4":
-				
-				PrintToFile(messagePrompt("Enter StudentId: "));
-								
-				
-				
+				try {
+					PrintToFile(messagePrompt("Enter StudentId: ").toUpperCase());
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			case "5":
 				print("Exiting application");
@@ -42,43 +45,64 @@ public class Main {
 			}
 		}while(!choice.equals("5"));
 	}
-	static void PrintToFile(String searchId) {
-		String filePath = "C:\\Users\\Staff\\Desktop\\Java programs\\FilePractice\\ReportCard.txt";
-		String fileContent = "Id, Name, Subject, Score\n";
+	static void PrintToFile(String searchId) throws FileNotFoundException {
+		String filePath = "C:\\Users\\Staff\\Desktop\\Java programs\\FilePractice\\";
 		
-		for(String studentName: Student.AllStudents.keySet()) {
-			// Get Id, Name
-			String studentId = Student.AllStudents.get(studentName);
-			if(studentId.equals(searchId)) {
-				fileContent +=  studentId + ", " +studentName;
-				for (Subject subject: Student.AllSubjects.get(studentId)) {
-					fileContent += subject.Name + ", " + subject.Score + "\n";
+		if(Student.AllStudents.containsValue(searchId)) {
+			String fileContent = "";
+			for(String studentName: Student.AllStudents.keySet()) {
+				// Get Id, Name
+				String studentId = Student.AllStudents.get(studentName);
+				if(studentId.equals(searchId.toUpperCase())) {
+					/* file content starts here: student's name and Id; 
+					*Up next table containing subjectTitle and Score*/
+					fileContent = studentName.concat(", ") + studentId 
+							+ "\nSubject, Score\n";
+					//file name is the name of the student and it would be added to the filePath.
+					filePath += studentName.concat(studentId.concat(".csv"));
+					double totalScore = 0;
+					ArrayList<Subject> studentSubjects = Student.AllSubjects.get(studentId);
+					for (Subject subject: studentSubjects) {
+						// file content continues subject and score
+						fileContent += subject.Name + ", " + subject.Score + "\n";
+						totalScore += subject.Score;
+					}
+					double averageScore = totalScore/studentSubjects.size();
+					// file contents continues: total score, average Score and grade
+					fileContent += "Total Score," + totalScore 
+							+ "\nAverage Scoore," + averageScore
+							+ "\nGrade," + Student.Grade(averageScore);;
 				}
 			}
-		}
-		
-		try {
-			FileWriter writer = new FileWriter(filePath);
-			writer.write(fileContent);
-			
-			writer.close();
-		}catch(IOException e) {
-			println("Error storing in file");
-			e.printStackTrace();
-		}
-		
-	}
-	static void SearchStudentById(String searchId) {
-		
-		for(String name: Student.AllStudents.keySet()) {
-			String id = Student.AllStudents.get(name);
-			if(id.equals(searchId)) {
-				print(name);
-				Student.DisplayScore(name, id);
-				break;
+			try {
+				FileWriter writer = new FileWriter(filePath);
+				writer.write(fileContent);
+				messagePrompt("File saved to :" + filePath);
+				writer.close();
+			}catch(IOException e) {
+				println("Error storing in file");
+				e.printStackTrace();
 			}
+		}else {
+			messagePrompt("Record not found");
 		}
-		messagePrompt("Press enter to continue");
+	}
+	
+	static void SearchStudentById(String searchId) {
+		if(Student.AllStudents.containsValue(searchId)) {
+			for(String name: Student.AllStudents.keySet()) {
+				String id = Student.AllStudents.get(name);
+				if(id.equals(searchId)) {
+					print(name.concat(">>\n"));
+					Student.DisplayScore(name, id);
+					break;
+				}
+			}
+			messagePrompt("Press enter to continue");
+		}else {
+			messagePrompt("Record not found");
+		}
+		
 	}
 	
 	static void AddStudent() {
@@ -101,6 +125,7 @@ public class Main {
 		println("4. Save to file");
 		println("5. Exit");
 		println("==============================================");
+		print("Type a number from 1 to 5, representing the \noptions above then press enter to execute\n");
 		print("Enter your choice: ");
 	}
 	

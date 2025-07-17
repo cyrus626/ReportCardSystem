@@ -21,7 +21,7 @@ class Student {
 		
 		if(AllStudents.containsKey(name)) {
 			Id = AllStudents.get(name); // Gets a student's Id
-			Main.messagePrompt(name + ", you've registered before." + "\n press enter to continue"); // idNumber remains the same.
+			Main.println(name + ", you've registered before." + "\n press enter to continue"); // idNumber remains the same.
 			
 			// Get previously stored record
 			studentSubjects = AllSubjects.get(Id);
@@ -56,8 +56,6 @@ class Student {
 	}
 	
 	public static void DisplayStudent() {
-		
-		
 		// Display information
 		for(String name: AllStudents.keySet()) {
 			
@@ -75,7 +73,6 @@ class Student {
 	// Showing one student's record
 	public static void DisplayScore(String studentName, String studentId) {
 		double totalScore = 0;
-		char grade;
 		ArrayList<Subject> studentSubjects = AllSubjects.get(studentId);
 		int noOfSubjects = studentSubjects.size();
 		for(Subject subject: studentSubjects) {
@@ -86,6 +83,11 @@ class Student {
 			
 		}
 		double averageScore = totalScore / noOfSubjects;
+		
+		Main.println("Total Score: " + totalScore + "\tAverage Score: " + averageScore + "\tGrade: " + Grade(averageScore));
+	}
+	public static char Grade(double averageScore) {
+		char grade;
 		if(averageScore > 70) {
 			grade = 'A';
 		}else if (averageScore > 60){
@@ -97,7 +99,7 @@ class Student {
 		}else {
 			grade = 'F';
 		}
-		Main.println("Total Score: " + totalScore + "\tAverage Score: " + averageScore + "\tGrade: " + grade);
+		return grade;
 	}
 
 }
