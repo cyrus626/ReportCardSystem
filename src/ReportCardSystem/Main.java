@@ -46,7 +46,7 @@ public class Main {
 		}while(!choice.equals("5"));
 	}
 	static void PrintToFile(String searchId) throws FileNotFoundException {
-		String filePath = "C:\\Users\\Staff\\Desktop\\Java programs\\FilePractice\\";
+		String filePath = ".\\src\\ReportCardSystem\\Outputs\\";
 		
 		if(Student.AllStudents.containsValue(searchId)) {
 			String fileContent = "";
